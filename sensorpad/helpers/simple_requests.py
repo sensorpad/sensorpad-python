@@ -1,24 +1,24 @@
 import json
+
 try:
-    from  urllib.error import URLError, HTTPError
-except:
-    from urllib2 import URLError, HTTPError
+    from urllib.error import HTTPError, URLError
+except ImportError:
+    from urllib2 import HTTPError, URLError
 
 try:
     from urllib.parse import urlencode
-except:
+except ImportError:
     from urllib import urlencode
 
 try:
     from urllib.request import Request
-except:
+except ImportError:
     from urllib2 import Request
 
 try:
     from urllib.request import urlopen
-except:
+except ImportError:
     from urllib2 import urlopen
-
 
 
 class Response:

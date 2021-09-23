@@ -1,6 +1,5 @@
 from setuptools import setup
 
-
 setup(
     name='sensorpad',
     description='No-dependencies Python client for Sensorpad.',
