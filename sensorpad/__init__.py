@@ -1,3 +1,3 @@
-from sensorpad.wrapper import Event, Sensor
+from sensorpad.wrapper import Event
 
-__all__ = ['Event', 'Sensor']
+__all__ = ['Event']

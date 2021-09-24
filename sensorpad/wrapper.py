@@ -1,3 +1,4 @@
+from sensorpad.helpers.parsers import isoformat_parser
 from sensorpad.helpers.simple_requests import request
 from sensorpad.settings import API_ENDPOINT
 
@@ -5,35 +6,39 @@ from sensorpad.settings import API_ENDPOINT
 class Event(object):
     """Sensorpad event."""
 
-    def __init__(self, response=None):
-        if response:
-            self.from_dict(response)
-
-    def from_dict(self, event_as_dict):
-        """Make event from dict."""
-        pass
-
-
-class Sensor(object):
-    """Sensor operations."""
-
     def __init__(self, sensor_code, api_endpoint=API_ENDPOINT):
-        self.code = sensor_code
+        self.sensor_code = sensor_code
+        self.id = None
+        self.satus = None
+        self.value = None
+        self.sensor_name = None
+        self.started = None
+        self.completed = None
+        self.next_scheduled_run = None
+        self.duration = None
+        self.delay = None
+        self.next_scheduled_run = None
+        self.interval_between_starts = None
+        self.interval_between_completes = None
         self.endpoint = api_endpoint
         # check if someone pass entire url as code
-        if '/' in self.code:
-            self.code = self.code.split('/')[-1]
+        if '/' in self.sensor_code:
+            self.sensor_code = self.sensor_code.split('/')[-1]
 
     def __repr__(self):
         """Text representation."""
-        return 'Sensor with code: `{code}`'.format(code=self.code)
+        if self.id:
+            return 'Event id: {id}, for senor with code: "{code}".'.format(
+                code=self.sensor_code, id=self.id)
+        else:
+            return 'Event for senor with code: "{code}", not sent yet.'.format(
+                code=self.sensor_code)
 
     def _sensor_request(self, request_url, params=None):
         """Request to sensor."""
         response = request(request_url, params=params)
         if response.status_code == 200:
-            event = Event(response=response.json())
-            return event
+            self.update_from_dict(response.json())
         # TO DO: different exceptions on different status codes
         else:
             err = 'Sensor returned status code {code} and response: {content}'
@@ -43,26 +48,50 @@ class Sensor(object):
                 )
             )
 
-    def start_event(self, value=None):
+    def update_from_dict(self, event_as_dict):
+        """Make or update event from dict."""
+        self.id = event_as_dict.get('id')
+        self.satus = event_as_dict.get('status')
+        self.value = event_as_dict.get('value')
+        self.sensor_code = event_as_dict.get('sensor')
+        self.sensor_name = event_as_dict.get('name')
+        self.started = isoformat_parser(event_as_dict.get('started'))
+        self.completed = isoformat_parser(event_as_dict.get('completed'))
+        self.next_scheduled_run = isoformat_parser(
+            event_as_dict.get('next_scheduled_run')
+        )
+        self.duration = event_as_dict.get('duration')
+        self.delay = event_as_dict.get('delay')
+        self.next_scheduled_run = event_as_dict.get('next_scheduled_run')
+        self.interval_between_starts = event_as_dict.get(
+            'interval_between_starts'
+        )
+        self.interval_between_completes = event_as_dict.get(
+            'interval_between_completes'
+        )
+
+    def start(self, value=None):
         """Start Sensorpad event."""
         request_url = '{endpoint}{code}/start'.format(
-            endpoint=self.endpoint, code=self.code
+            endpoint=self.endpoint, code=self.sensor_code
         )
         params = {}
         if value:
             params['value'] = value
 
-        return self._sensor_request(request_url, params=params)
+        self._sensor_request(request_url, params=params)
 
-    def complete_event(self, value=None, event_id=None):
+    def complete(self, value=None, event_id=None):
         """Complete Sensorpad event."""
         if not event_id:
             request_url = '{endpoint}{code}/'.format(
-                endpoint=self.endpoint, code=self.code
+                endpoint=self.endpoint, code=self.sensor_code
             )
         else:
             request_url = '{endpoint}{code}/complete/{event_id}/'.format(
-                endpoint=self.endpoint, code=self.code, event_id=event_id
+                endpoint=self.endpoint,
+                code=self.sensor_code,
+                event_id=event_id
             )
         params = {}
         if value:
@@ -70,6 +99,6 @@ class Sensor(object):
 
         return self._sensor_request(request_url, params=params)
 
-    def send_event(self, value=None, event_id=None):
-        """Start and complete event. This is alias for `complete_event`."""
-        self.complete_event(value=value, event_id=event_id)
+    def send(self, value=None, event_id=None):
+        """Start and complete event. This is alias for `complete`."""
+        self.complete(value=value, event_id=event_id)
