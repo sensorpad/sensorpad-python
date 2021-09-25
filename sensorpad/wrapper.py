@@ -1,4 +1,7 @@
-from sensorpad.helpers.parsers import isoformat_parser
+import datetime
+import json
+
+from sensorpad.helpers.exceptions import EventAlreadyStarted
 from sensorpad.helpers.simple_requests import request
 from sensorpad.settings import API_ENDPOINT
 
@@ -9,7 +12,7 @@ class Event(object):
     def __init__(self, sensor_code, api_endpoint=API_ENDPOINT):
         self.sensor_code = sensor_code
         self.id = None
-        self.satus = None
+        self.status = None
         self.value = None
         self.sensor_name = None
         self.started = None
@@ -27,12 +30,12 @@ class Event(object):
 
     def __repr__(self):
         """Text representation."""
-        if self.id:
-            return 'Event id: {id}, for senor with code: "{code}".'.format(
-                code=self.sensor_code, id=self.id)
-        else:
-            return 'Event for senor with code: "{code}", not sent yet.'.format(
-                code=self.sensor_code)
+
+        def json_datetime_serializer(o):
+            if isinstance(o, (datetime.date, datetime.datetime)):
+                return o.isoformat()
+
+        return json.dumps(self.__dict__, default=json_datetime_serializer)
 
     def _sensor_request(self, request_url, params=None):
         """Request to sensor."""
@@ -50,13 +53,13 @@ class Event(object):
 
     def update_from_dict(self, event_as_dict):
         """Make or update event from dict."""
-        self.id = event_as_dict.get('id')
-        self.satus = event_as_dict.get('status')
+        self.id = event_as_dict.get('event_id')
+        self.status = event_as_dict.get('status')
         self.value = event_as_dict.get('value')
         self.sensor_code = event_as_dict.get('sensor')
         self.sensor_name = event_as_dict.get('name')
-        self.started = isoformat_parser(event_as_dict.get('started'))
-        self.completed = isoformat_parser(event_as_dict.get('completed'))
+        self.started = event_as_dict.get('started')
+        self.completed = event_as_dict.get('completed')
         self.next_scheduled_run = isoformat_parser(
             event_as_dict.get('next_scheduled_run')
         )
@@ -72,6 +75,8 @@ class Event(object):
 
     def start(self, value=None):
         """Start Sensorpad event."""
+        if self.status == 'start':
+            raise EventAlreadyStarted(self.id)
         request_url = '{endpoint}{code}/start'.format(
             endpoint=self.endpoint, code=self.sensor_code
         )
@@ -81,17 +86,18 @@ class Event(object):
 
         self._sensor_request(request_url, params=params)
 
-    def complete(self, value=None, event_id=None):
+    def complete(self, value=None):
         """Complete Sensorpad event."""
-        if not event_id:
+        if not self.id:
             request_url = '{endpoint}{code}/'.format(
-                endpoint=self.endpoint, code=self.sensor_code
+                endpoint=self.endpoint,
+                code=self.sensor_code
             )
         else:
             request_url = '{endpoint}{code}/complete/{event_id}/'.format(
                 endpoint=self.endpoint,
                 code=self.sensor_code,
-                event_id=event_id
+                event_id=self.id
             )
         params = {}
         if value:
@@ -99,6 +105,6 @@ class Event(object):
 
         return self._sensor_request(request_url, params=params)
 
-    def send(self, value=None, event_id=None):
+    def send(self, value=None):
         """Start and complete event. This is alias for `complete`."""
-        self.complete(value=value, event_id=event_id)
+        self.complete(value=value)

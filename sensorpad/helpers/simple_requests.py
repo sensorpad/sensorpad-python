@@ -43,7 +43,7 @@ class Response:
         try:
             output = json.loads(self.body)
         except json.JSONDecodeError:
-            output = ""
+            output = {}
         return output
 
 
@@ -57,7 +57,7 @@ def request(
     timeout=5,
     error_count=0,
 ):
-    if not url.casefold().startswith("http"):
+    if not url.lower().startswith("http"):
         raise URLError("Incorrect and possibly insecure protocol in url")
     method = method.upper()
     request_data = None
