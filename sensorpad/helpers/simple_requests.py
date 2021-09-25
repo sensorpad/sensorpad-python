@@ -1,24 +1,7 @@
 import json
-
-try:
-    from urllib.error import HTTPError, URLError
-except ImportError:
-    from urllib2 import HTTPError, URLError
-
-try:
-    from urllib.parse import urlencode
-except ImportError:
-    from urllib import urlencode
-
-try:
-    from urllib.request import Request
-except ImportError:
-    from urllib2 import Request
-
-try:
-    from urllib.request import urlopen
-except ImportError:
-    from urllib2 import urlopen
+from urllib.error import HTTPError, URLError
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
 
 class Response:
@@ -43,7 +26,7 @@ class Response:
         try:
             output = json.loads(self.body)
         except json.JSONDecodeError:
-            output = {}
+            output = ""
         return output
 
 
@@ -57,7 +40,7 @@ def request(
     timeout=5,
     error_count=0,
 ):
-    if not url.lower().startswith("http"):
+    if not url.casefold().startswith("http"):
         raise URLError("Incorrect and possibly insecure protocol in url")
     method = method.upper()
     request_data = None

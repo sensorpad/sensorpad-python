@@ -1,7 +1,10 @@
 import datetime
 import json
 
-from sensorpad.helpers.exceptions import EventAlreadyStarted
+from sensorpad.constants import COMPLETE_STATUS, START_STATUS
+from sensorpad.helpers.exceptions import (EventAlreadyComplete,
+                                          EventAlreadyStarted)
+from sensorpad.helpers.parsers import isoformat_parser
 from sensorpad.helpers.simple_requests import request
 from sensorpad.settings import API_ENDPOINT
 
@@ -12,7 +15,7 @@ class Event(object):
     def __init__(self, sensor_code, api_endpoint=API_ENDPOINT):
         self.sensor_code = sensor_code
         self.id = None
-        self.status = None
+        self.satus = None
         self.value = None
         self.sensor_name = None
         self.started = None
@@ -42,6 +45,8 @@ class Event(object):
         response = request(request_url, params=params)
         if response.status_code == 200:
             self.update_from_dict(response.json())
+        if response.status_code == 417:
+            raise EventAlreadyComplete()
         # TO DO: different exceptions on different status codes
         else:
             err = 'Sensor returned status code {code} and response: {content}'
@@ -58,8 +63,8 @@ class Event(object):
         self.value = event_as_dict.get('value')
         self.sensor_code = event_as_dict.get('sensor')
         self.sensor_name = event_as_dict.get('name')
-        self.started = event_as_dict.get('started')
-        self.completed = event_as_dict.get('completed')
+        self.started = isoformat_parser(event_as_dict.get('started'))
+        self.completed = isoformat_parser(event_as_dict.get('completed'))
         self.next_scheduled_run = isoformat_parser(
             event_as_dict.get('next_scheduled_run')
         )
@@ -75,8 +80,10 @@ class Event(object):
 
     def start(self, value=None):
         """Start Sensorpad event."""
-        if self.status == 'start':
+        if self.status == START_STATUS:
             raise EventAlreadyStarted(self.id)
+        if self.status == COMPLETE_STATUS:
+            raise EventAlreadyComplete(self.id)
         request_url = '{endpoint}{code}/start'.format(
             endpoint=self.endpoint, code=self.sensor_code
         )
@@ -88,6 +95,8 @@ class Event(object):
 
     def complete(self, value=None):
         """Complete Sensorpad event."""
+        if self.status == COMPLETE_STATUS:
+            raise EventAlreadyComplete(self.id)
         if not self.id:
             request_url = '{endpoint}{code}/'.format(
                 endpoint=self.endpoint,
