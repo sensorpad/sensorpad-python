@@ -36,3 +36,31 @@ Shows the state of current event
  'interval_between_completes': 43415.197581,
  'endpoint': 'https://sensorpad.link/'}
 ```
+
+
+## Advanced usage
+
+### Measuring time of event
+
+```
+import time
+from sensorpad import Event
+
+event = Event('b24e4093-db36-4b5c-8c7a-16...')
+
+event.start()
+time.sleep(5)
+event.complete(value=42)
+```
+
+This way affects event `duration`:
+
+```
+{'sensor_code': 'b24e4093-db36-4b5c-8c7a-16...',
+ 'id': 118178,
+ 'status': 'complete',
+ 'value': '42',
+ ...
+ 'duration': 5.549685,
+ ...}
+```
