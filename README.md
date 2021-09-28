@@ -27,10 +27,10 @@ Shows the state of current event
  'status': 'complete',
  'value': '1',
  'sensor_name': 'Test sensor',
- 'started': datetime.datetime(2021, 9, 25, 13, 18, 22, 686396, tzinfo=tzutc()),
- 'completed': datetime.datetime(2021, 9, 25, 13, 24, 45, 814256, tzinfo=tzutc()),
+ 'started': datetime.datetime(2021, 9, 28, 0, 52, 26, 625234, tzinfo=tzutc()),
+ 'completed': datetime.datetime(2021, 9, 28, 0, 52, 26, 626234, tzinfo=tzutc()),
  'next_scheduled_run': '2021-09-25T13:20:00Z',
- 'duration': 383.12786,
+ 'duration': 0.001,
  'delay': 285.814256,
  'interval_between_starts': 59.986451,
  'interval_between_completes': 43415.197581,
@@ -61,6 +61,8 @@ This way affects event `duration`:
  'status': 'complete',
  'value': '42',
  ...
+ 'started': datetime.datetime(2021, 9, 28, 0, 49, 6, 972973, tzinfo=tzutc()),
+ 'completed': datetime.datetime(2021, 9, 28, 0, 49, 12, 522658, tzinfo=tzutc()),
  'duration': 5.549685,
  ...}
 ```
