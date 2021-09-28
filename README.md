@@ -25,7 +25,7 @@ Shows the state of current event
 {'sensor_code': 'b24e4093-db36-4b5c-8c7a-16...',
  'id': 116184,
  'status': 'complete',
- 'value': 1,
+ 'value': '1',
  'sensor_name': 'Test sensor',
  'started': datetime.datetime(2021, 9, 25, 13, 18, 22, 686396, tzinfo=tzutc()),
  'completed': datetime.datetime(2021, 9, 25, 13, 24, 45, 814256, tzinfo=tzutc()),
