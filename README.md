@@ -66,3 +66,9 @@ This way affects event `duration`:
  'duration': 5.549685,
  ...}
 ```
+
+## Wanna use Sensorpad via plain API?
+
+Please check the documentation: 
+
+https://sensorpad.io/docs/simple-events/
