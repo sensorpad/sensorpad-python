@@ -12,6 +12,7 @@ class Response:
         self.status_code = status
         self.error_count = error_count
 
+    @property
     def text(self):
         """Return body as text."""
         return self.body

@@ -15,7 +15,7 @@ class Event(object):
     def __init__(self, sensor_code, api_endpoint=API_ENDPOINT):
         self.sensor_code = sensor_code
         self.id = None
-        self.satus = None
+        self.status = None
         self.value = None
         self.sensor_name = None
         self.started = None
@@ -45,7 +45,7 @@ class Event(object):
         response = request(request_url, params=params)
         if response.status_code == 200:
             self.update_from_dict(response.json())
-        if response.status_code == 417:
+        elif response.status_code == 417:
             raise EventAlreadyComplete()
         # TO DO: different exceptions on different status codes
         else:
