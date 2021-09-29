@@ -57,7 +57,7 @@ event.complete(value=42)
 
 This way affects event `duration`:
 
-```python
+```json
 {'sensor_code': 'b24e4093-db36-4b5c-8c7a-16...',
  'id': 118178,
  'status': 'complete',
