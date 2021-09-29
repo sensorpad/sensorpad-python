@@ -7,7 +7,7 @@ This library does not install dependencies, so you don't have to worry about Req
 
 ## Base usage
 
-```
+```python
 from sensorpad import Event
 
 event = Event('b24e4093-db36-4b5c-8c7a-16...')
@@ -17,11 +17,13 @@ event.send(value=1)
 
 That's it.
 
-```event.__dict__```
+```python
+event.__dict__
+```
 
 Shows the state of current event
 
-```
+```json
 {'sensor_code': 'b24e4093-db36-4b5c-8c7a-16...',
  'id': 116184,
  'status': 'complete',
@@ -42,7 +44,7 @@ Shows the state of current event
 
 ### Measuring time of event
 
-```
+```python
 import time
 from sensorpad import Event
 
@@ -55,7 +57,7 @@ event.complete(value=42)
 
 This way affects event `duration`:
 
-```
+```python
 {'sensor_code': 'b24e4093-db36-4b5c-8c7a-16...',
  'id': 118178,
  'status': 'complete',
