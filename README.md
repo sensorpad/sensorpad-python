@@ -7,6 +7,8 @@ This library does not install dependencies, so you don't have to worry about Req
 
 ## Installation
 
+You need python3 to use this library.
+
 ```
 pip install sensorpad --upgrade
 ```
