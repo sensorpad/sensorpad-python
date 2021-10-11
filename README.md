@@ -29,7 +29,7 @@ event.__dict__
 
 Shows the state of current event
 
-```json
+```python
 {'sensor_code': 'b24e4093-db36-4b5c-8c7a-16...',
  'id': 116184,
  'status': 'complete',
