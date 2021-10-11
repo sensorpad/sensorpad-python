@@ -5,6 +5,12 @@ Sensorpad-python is a library for sending events to Sensorpad.
 This library does not install dependencies, so you don't have to worry about Requests package version compatibility.
 
 
+## Installation
+
+````
+pip install sensorpad
+```
+
 ## Base usage
 
 ```python
