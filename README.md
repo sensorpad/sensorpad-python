@@ -8,7 +8,7 @@ This library does not install dependencies, so you don't have to worry about Req
 ## Installation
 
 ```
-pip install sensorpad
+pip install sensorpad --upgrade
 ```
 
 ## Base usage
