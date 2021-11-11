@@ -12,9 +12,9 @@ from sensorpad.settings import API_ENDPOINT
 class Event(object):
     """Sensorpad event."""
 
-    def __init__(self, sensor_code, api_endpoint=API_ENDPOINT):
+    def __init__(self, sensor_code, api_endpoint=API_ENDPOINT, id=None):
         self.sensor_code = sensor_code
-        self.id = None
+        self.id = id
         self.status = None
         self.value = None
         self.sensor_name = None
@@ -45,7 +45,7 @@ class Event(object):
         response = request(request_url, params=params)
         if response.status_code == 200:
             self.update_from_dict(response.json())
-        elif response.status_code == 417:
+        elif response.status_code == 409:
             raise EventAlreadyComplete()
         # TO DO: different exceptions on different status codes
         else:
@@ -84,6 +84,8 @@ class Event(object):
             raise EventAlreadyStarted(self.id)
         if self.status == COMPLETE_STATUS:
             raise EventAlreadyComplete(self.id)
+        if self.id:
+            raise EventAlreadyStarted(self.id)
         request_url = '{endpoint}{code}/start'.format(
             endpoint=self.endpoint, code=self.sensor_code
         )

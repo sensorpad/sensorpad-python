@@ -78,7 +78,7 @@ def request(
             )
     except HTTPError as e:
         response = Response(
-            body=str(e.reason),
+            body=str(e.read().decode()),
             headers=e.headers,
             status=e.code,
             error_count=error_count + 1,

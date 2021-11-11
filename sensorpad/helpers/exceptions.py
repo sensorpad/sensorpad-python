@@ -3,7 +3,8 @@ class EventAlreadyStarted(RuntimeError):
     def __init__(self, event_id):
         self.message = """
             Event is already STARTED and has ID: {0},
-            you need instantiate new object of this class
+            you need complete current event
+            or instantiate new object of this class
             to send new event.""".format(event_id)
         try:
             super(EventAlreadyStarted, self).__init__(event_id)
