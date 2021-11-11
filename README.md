@@ -81,8 +81,6 @@ This way affects event `duration`:
 
 Lets assume you need to start event, serialize ID of event and complete that event on another server.
 ```python
-```python
-import time
 from sensorpad import Event
 
 event = Event('b24e4093-db36-4b5c-8c7a-16...')
