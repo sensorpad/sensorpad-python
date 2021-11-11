@@ -77,6 +77,27 @@ This way affects event `duration`:
  ...}
 ```
 
+### Starting and completing event in different parts of you code
+
+Lets assume you need to start event, serialize ID of event and complete that event on another server.
+```python
+```python
+import time
+from sensorpad import Event
+
+event = Event('b24e4093-db36-4b5c-8c7a-16...')
+
+event.start()
+print(event.id)
+# 424242
+
+
+# instantiate the same event
+the_same_event = Event('b24e4093-db36-4b5c-8c7a-16...', id=424242)
+the_same_event.complete()
+```
+
+
 ## Wanna use Sensorpad via plain API?
 
 Please check the documentation: 
