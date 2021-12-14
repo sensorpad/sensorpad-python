@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='sensorpad',
     description='No-dependencies Python client for Sensorpad.',
-    version='0.0.5',
+    version='0.0.6',
     license='MIT',
     author="Alexander Zaitsev",
     author_email='alex@sensorpad.io',

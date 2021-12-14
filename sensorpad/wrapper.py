@@ -111,7 +111,7 @@ class Event(object):
                 event_id=self.id
             )
         params = {}
-        if value:
+        if value is not None:
             params['value'] = value
 
         return self._sensor_request(request_url, params=params)
